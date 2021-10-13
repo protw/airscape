@@ -1,0 +1,29 @@
+> **Проєкт *AirScape***
+
+- **Початок**
+  - [Концепт / Concept](README.md)
+  - [Що і як](what_how.md)
+  - [Соціальні медіа](social_media.md)
+  
+- **Твіттер**
+  - [Тарифні плани](tariffs.md)
+  - [Пошук в Твіттері](twitter_search.md)
+  - [Зчитування твітів через API](tweets_reading_api.md)
+  - [Зчитування твітів без API](twint.md)
+  - [Twint читає твіти](twint_read.md)
+  
+- **Аналіз текстів**
+  - [Глосарій NLP](nlp_glossary.md)
+  - [Тестування *polyglot*](polyglot.md)
+  - [Класифікація текстів](classification.md)
+  - [Аналіз настроїв](sentiment_analysis.md)
+
+- **AQI з твітів**
+  - [Аналіз текстів і дані моніторингу](texts_vs_data.md)
+
+- **[Посилання](refs.md)**
+
+- **[План розробки](workplan.md)**
+
+
+
