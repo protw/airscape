@@ -25,6 +25,7 @@
 13. [GitHub - facebookresearch/fastText: Library for fast text representation and classification.](https://github.com/facebookresearch/fastText)
     - [pre-trained word vectors for 157 languages, trained on *Common Crawl* and *Wikipedia* using *fastText* · GitHub](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md#models)
 14. [Cloud Natural Language  |  Google Cloud](https://cloud.google.com/natural-language) - KEY FEATURES - Three natural language solutions that work with your text: AutoML, Natural Language API, Healthcare Natural Language AI
+15. [Python Word Cloud and NLTK | Shep Sheppard](https://sqlshep.com/?p=971)
 
 ## 3. Моніторинг параметрів довкілля з допомогою SMD
 
