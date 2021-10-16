@@ -15,9 +15,10 @@
 - **Аналіз текстів**
   - [Глосарій NLP](nlp_glossary.md)
   - [Тестування *polyglot*](polyglot.md)
+  - [Хмара слів](word_cloud.md)
   - [Класифікація текстів](classification.md)
   - [Аналіз настроїв](sentiment_analysis.md)
-
+  
 - **AQI з твітів**
   - [Аналіз текстів і дані моніторингу](texts_vs_data.md)
 
