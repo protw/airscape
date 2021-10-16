@@ -11,6 +11,7 @@ Created on Sun Oct 10 20:53:17 2021
 
 import re
 import nltk
+nltk.download('punkt')
 from ukrainian_stemmer import UkrainianStemmer
 
 def ua_tokenizer(text,ua_stemmer=True,stop_words=[]):
@@ -31,7 +32,7 @@ def ua_tokenizer(text,ua_stemmer=True,stop_words=[]):
     text=re.sub(r"""([0-9])([\u0400-\u04FF]|[A-z])""", r"\1 \2", text)
     text=re.sub(r"""([\u0400-\u04FF]|[A-z])([0-9])""", r"\1 \2", text)
     text=re.sub(r"""[\-–.,!:+*/_]""", ' ', text)
-
+    
     for word in nltk.word_tokenize(text):
         if word.isalpha():
             word=word.lower()
@@ -41,7 +42,7 @@ def ua_tokenizer(text,ua_stemmer=True,stop_words=[]):
             tokenized_list.append(word)
     return tokenized_list
 
-def  ngrams_info(series,n=1,most_common=20,ua_stemmer=True,stop_words=[]):
+def ngrams_info(series,n=1,most_common=20,ua_stemmer=True,stop_words=[]):
     """ ngrams_info - Show detailed information about string pandas.Series column.
     
     Keyword arguments:

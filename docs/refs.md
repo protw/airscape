@@ -24,6 +24,7 @@
 12. [10 Best NLP (Natural Language Processing) with Python Courses for Beginners in 2021 | by javinpaul | Javarevisited | Medium](https://medium.com/javarevisited/10-best-nlp-natural-language-processing-with-python-courses-for-beginners-bfe526c6b0b2)
 13. [GitHub - facebookresearch/fastText: Library for fast text representation and classification.](https://github.com/facebookresearch/fastText)
     - [pre-trained word vectors for 157 languages, trained on *Common Crawl* and *Wikipedia* using *fastText* · GitHub](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md#models)
+14. [Cloud Natural Language  |  Google Cloud](https://cloud.google.com/natural-language) - KEY FEATURES - Three natural language solutions that work with your text: AutoML, Natural Language API, Healthcare Natural Language AI
 
 ## 3. Моніторинг параметрів довкілля з допомогою SMD
 
