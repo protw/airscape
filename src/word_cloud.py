@@ -8,16 +8,21 @@ Created on Fri Oct 15 09:18:53 2021
 ## We're testing a nice paper
 ## [Python Word Cloud and NLTK | Shep Sheppard](https://sqlshep.com/?p=971)
 
-#### Reading Ukrainian stopwords
-
+""" Reading Ukrainian stopwords
+"""
 import pandas as pd
 
+""" The following Ukrainian words derivative from 'мати' ('to have') are 
+    added manually to 'stopwords_ua.txt':
+        мав, має, маємо, маєте, мала, мали, мати, матиме, матимемо, матиму, 
+        матимеш, маю, мають
+"""
 stopwords_ua_file = 'stopwords_ua.txt'
 stopwords_ua_df = pd.read_csv(stopwords_ua_file, index_col=False, header=None)
 stopwords_ua = list(stopwords_ua_df.iloc[:,0])
 
-#### We already read tweets
-
+""" We already read tweets
+"""
 from twint_ops import twint_query_pars, twint_read_csv
 
 tw = twint_query_pars()
@@ -25,33 +30,44 @@ twint_df = twint_read_csv(tw['output_name'])
 tweets_ua = twint_df.loc[twint_df['language']=='uk','tweet']
 text_ua = ' '.join(tweets_ua)
 
+""" Tokenizing and lemmatizing word list
+"""
 from nlp_akhmel import ua_tokenizer
+import simplemma
+langdata=simplemma.load_data('uk')
 
-tokenized_list = ua_tokenizer(text_ua,ua_stemmer=True,stop_words=stopwords_ua)
+tokenized_list = ua_tokenizer(text_ua,ua_stemmer=False,stop_words=stopwords_ua)
+lemmatized_list = [simplemma.lemmatize(t, langdata) for t in tokenized_list]
 
-'''
-wordcloud = WordCloud(width=1800,height=1200, background_color='white'). \
-    generate_from_frequencies(word_freq)
+""" Building the frequency dictionary from word list
+	Src: https://programminghistorian.org/en/lessons/counting-frequencies
+"""
+def wordListToFreqDict(word_list):
+	word_freq = [word_list.count(word) for word in word_list]
+	return dict(list(zip(word_list,word_freq)))
 
-#### First we create the word frequency dictionary 'word_freq'
+word_freq = wordListToFreqDict(lemmatized_list)
 
-word_freq = worldcloud.words_
+""" Sorting dictionary 'word_freq' by value in descending order using 
+    function 'sortFreqDict' and saving 'word_freq' in CSV file using 
+    function 'dict2csv'. These functions are located in module 'utils'
+"""
+from utils import sortFreqDict, dict2csv
 
-#### Then we manually correct the word frequency dictionary 'word_freq' 
-#### and prepare corrected version of 'word_freq' in 'word_freq_zel_2.py'
-'''
+word_freq = sortFreqDict(word_freq)
+csv_file = 'word_freq_zel.csv'
+dict2csv(word_freq, csv_file)
 
-#### We build world cloud 'wrdcld' and simultaneously save it to image
-#### 'word_freq_zel.png'
-
-from word_freq_zel_2 import word_freq
+""" We build world cloud 'wrdcld' and simultaneously save it to image
+"""
 from wordcloud import WordCloud
 
 wrdcld = WordCloud(width=1800, height=1200, background_color='white').\
     generate_from_frequencies(word_freq).to_file('word_freq_zel.png')
+word_freq1 = wrdcld.words_
 
-#### Finally we plot the word cloud
-
+""" Finally we plot the word cloud
+"""
 import matplotlib.pyplot as plt
 
 width = 12

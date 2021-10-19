@@ -36,6 +36,8 @@ def ua_tokenizer(text,ua_stemmer=True,stop_words=[]):
     for word in nltk.word_tokenize(text):
         if word.isalpha():
             word=word.lower()
+        else:
+            continue
         if ua_stemmer is True:
             word=UkrainianStemmer(word).stem_word()
         if word not in stop_words:    
