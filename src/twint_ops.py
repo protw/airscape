@@ -1,13 +1,11 @@
 ## twint operations
 
 #### SET TWINT QUERY PARAMETERS
+import json
 
-def twint_query_pars():
-    tw = {}
-    tw['user'] = 'ZelenskyyUa'
-    tw['output_type'] = 'csv'
-    tw['output_name'] = './data/twint_zelenski.csv'
-    tw['since'] = '2019-04-01'
+def twint_query_pars(config_file='input_setting.json'):
+    with open(config_file, 'r') as json_file:
+        tw = json.load(json_file)
     return tw
 
 #### FORM QUERY VIA CLI
