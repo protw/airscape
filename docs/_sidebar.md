@@ -16,6 +16,7 @@
   - [Глосарій NLP](nlp_glossary.md)
   - [Тестування *polyglot*](polyglot.md)
   - [Хмара слів](word_cloud.md)
+  - [Матриця невідповідностей](confusion_matrix.md)
   - [Класифікація текстів](classification.md)
   - [Аналіз настроїв](sentiment_analysis.md)
   
