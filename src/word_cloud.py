@@ -33,10 +33,12 @@ stopwords_ua = list(stopwords_ua_df.iloc[:,0])
 """ Tokenizing and lemmatizing word list
 """
 from nlp_akhmel import ua_tokenizer
-import simplemma
-langdata=simplemma.load_data('uk')
 
 tokenized_list = ua_tokenizer(text_ua,ua_stemmer=False,stop_words=stopwords_ua)
+
+import simplemma
+
+langdata = simplemma.load_data('uk')
 lemmatized_list = [simplemma.lemmatize(t, langdata) for t in tokenized_list]
 
 """ Building the frequency dictionary from word list
