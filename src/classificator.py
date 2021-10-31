@@ -6,7 +6,9 @@ twits_df = pd.read_csv(twits)
 
 ## Join three categories [3,6,7] into single [3]
 twits_df['Категорія_Ід2'] = \
-    [(3 if x in [6,7] else x) for x in twits_df['Категорія_Ід']]
+    [(3 if x in [1,6,7] else x) for x in twits_df['Категорія_Ід']]
+twits_df['Категорія_Ід2'] = \
+    [(4 if x in [5] else x) for x in twits_df['Категорія_Ід2']]
 
 ## Read definitions of categores
 categ = './data/twint_zelenski_classes.csv'

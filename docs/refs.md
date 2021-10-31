@@ -51,6 +51,10 @@
 18. [John Snow Labs | NLP & AI in Healthcare](https://www.johnsnowlabs.com/)
 
     - [Ukrainian Lemmatizer- Spark NLP Model](https://nlp.johnsnowlabs.com/2020/05/05/lemma_uk.html)
+    
+19. [Обробка природної мови (NLP) у Python з кодом (Частина 2. Класифікація текстів) | by Oleg Dubetcky | Medium](https://oleg-dubetcky.medium.com/обробка-природної-мови-nlp-у-python-з-кодом-частина-2-класифікація-текстів-b168878ba32d)
+
+    - [Text-Classification-with-ML-Project/news.csv at main · olegdubetcky/Text-Classification-with-ML-Project · GitHub](https://github.com/olegdubetcky/Text-Classification-with-ML-Project/blob/main/news.csv) - зазначене в статті посилання на джерело даних не працює - наприкінці виникає зайвий апостроф, який треба видалити, після чого все працює, або випробувати відкритий код [прикладу з Colab](https://colab.research.google.com/drive/1jN6p8BiYLHD5qnUKHIhRDPBTp6pAxLhm?usp=sharing)
 
 ## 3. Моніторинг параметрів довкілля з допомогою SMD
 
