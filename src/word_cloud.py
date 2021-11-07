@@ -5,6 +5,8 @@ Created on Fri Oct 15 09:18:53 2021
 @author: https://protw.github.io/oleghbond
 """
 
+from config_dir import my_dir # first, set paths to my directories
+
 ## We're testing a nice paper
 ## [Python Word Cloud and NLTK | Shep Sheppard](https://sqlshep.com/?p=971)
 
@@ -13,7 +15,7 @@ Created on Fri Oct 15 09:18:53 2021
 from twint_ops import twint_query_pars, twint_read_csv
 
 tw = twint_query_pars()
-twint_df = twint_read_csv(tw['output_name'])
+twint_df = twint_read_csv(my_dir['data'] + tw['output_name'])
 tweets_ua = twint_df.loc[twint_df['language']=='uk','tweet']
 text_ua = ' '.join(tweets_ua)
 
@@ -26,7 +28,7 @@ import pandas as pd
         мав, має, маємо, маєте, мала, мали, мати, матиме, матимемо, 
         матиму, матимеш, маю, мають
 """
-stopwords_ua_file = tw['stopwords_ua_file']
+stopwords_ua_file = my_dir['data'] + tw['stopwords_ua_file']
 stopwords_ua_df = pd.read_csv(stopwords_ua_file, index_col=False, header=None)
 stopwords_ua = list(stopwords_ua_df.iloc[:,0])
 
@@ -57,7 +59,7 @@ word_freq = wordListToFreqDict(lemmatized_list)
 from utils import sortFreqDict, dict2csv
 
 word_freq = sortFreqDict(word_freq)
-csv_file = tw['word_freq_csv']
+csv_file = my_dir['data'] + tw['word_freq_csv']
 dict2csv(word_freq, csv_file)
 
 """ We build world cloud 'wrdcld' and simultaneously save it to image
@@ -65,7 +67,7 @@ dict2csv(word_freq, csv_file)
 from wordcloud import WordCloud
 
 wrdcld = WordCloud(width=1800, height=1200, background_color='white').\
-    generate_from_frequencies(word_freq).to_file(tw['word_freq_img'])
+    generate_from_frequencies(word_freq).to_file(my_dir['data'] + tw['word_freq_img'])
 word_freq1 = wrdcld.words_
 
 """ Finally we plot the word cloud

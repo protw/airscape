@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Nov  5 08:30:11 2021
+
+For setting directories for use in own applcation run the following import line:
+    
+    >>> from config_dir import my_dir
+
+`my_dir` is dict storing needed directories that are added to path.
+####
+!!ATTENTION!!
+The name of this file is `config_dir.py.txt`. In order to make use of it do the 
+following:
+  1) assign your correct paths in dictonary `my_dir` in function `set_my_dir`;
+  2) modify name of this file removing `.txt`;
+  3) delete the text inside this file between (and including) two `####`
+####
+@author: protw.github.io/oleghbond
+"""
+
+import sys
+
+def set_my_dir():
+    p = sys.path
+    ## In order to make it workable assign your correct paths in this dictonary
+    my_dir = {
+        'lib' : '<local_dir_prefix>\\airscape\\lib\\',
+        'data': '<local_dir_prefix>\\airscape\\data\\'
+        }
+    for key, value in my_dir.items():
+        if value not in p:
+            sys.path.append(value)
+            print(f'Directory "{key}" is put into path list.')
+        else:
+            print(f'Directory "{key}" is already in path list.')
+    return my_dir
+
+my_dir = set_my_dir()

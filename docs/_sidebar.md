@@ -11,6 +11,7 @@
   - [Зчитування твітів через API](tweets_reading_api.md)
   - [Зчитування твітів без API](twint.md)
   - [Twint читає твіти](twint_read.md)
+  - [Порівнюємо міста](compare_cities.md)
   
 - **Аналіз текстів**
   - [Глосарій NLP](nlp_glossary.md)

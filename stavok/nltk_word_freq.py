@@ -1,4 +1,6 @@
 import pandas as pd
+
+from config_dir import my_dir # first, set paths to my directories
 from twint_ops import twint_query_pars, twint_read_csv
 
 #### SET TWINT QUERY PARAMETERS

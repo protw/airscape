@@ -1,9 +1,17 @@
 ## twint operations
 
+from config_dir import my_dir
+
 #### SET TWINT QUERY PARAMETERS
-import json
+import json, os
+
+"""def set_path_pre(file):
+    dir_parts = os.path.normpath(__file__).split(os.path.sep)[:-1]
+    dir_parts.append(file)
+    return '/'.join(dir_parts)"""
 
 def twint_query_pars(config_file='input_setting.json'):
+    config_file = '\\'.join([os.getcwd(),config_file])
     with open(config_file, 'r') as json_file:
         tw = json.load(json_file)
     return tw
@@ -17,7 +25,7 @@ def twint_cli(tw):
     tw_run_str = 'twint' + \
                  ' -u '  + tw['user'] + \
                  ' --'   + tw['output_type'] + \
-                 ' -o '  + tw['output_name']
+                 ' -o '  + '"' + my_dir['data'] + tw['output_name']  + '"'
 
     return tw_run_str
 
@@ -32,7 +40,7 @@ def twint_api(tw):
 
     c.Username = tw['user']
     c.Store_csv = (tw['output_type'] == 'csv')
-    c.Output = tw['output_name']
+    c.Output = my_dir['data'] + tw['output_name']
     c.Hide_output = True
 
     twint.run.Search(c)

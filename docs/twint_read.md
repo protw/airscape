@@ -145,3 +145,19 @@ def del_empty_columns(df):
 
 twint_df = del_empty_columns(twint_df)
 ```
+
+## PS. Ще помилки коду
+
+Згодом виявилось, що не працює параметр `c.Lang` в коді - на виході не відбувається фільтрація твітів за мовою (див. [тут](https://github.com/twintproject/twint/pull/1025))
+
+```python
+c.Lang = 'uk' # does not work
+```
+
+Для виправлення помилки потрібно вставити у файл *url.py* після рядка 113 наступний код:
+
+```python
+if config.Lang:
+    q += f" lang:{config.Lang}"
+```
+

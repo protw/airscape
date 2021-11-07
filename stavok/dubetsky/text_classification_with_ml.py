@@ -7,17 +7,56 @@ Original file is located at
     https://colab.research.google.com/drive/1jN6p8BiYLHD5qnUKHIhRDPBTp6pAxLhm
 """
 
+data_ind = 1 # 0 - Dubetsky, 1 - Bond
+data_src = ['Dubetsky', 'Bond'][data_ind]
+if data_src == 'Dubetsky': # Oleg Dubetsky data
+    csv_file = 'https://raw.githubusercontent.com/olegdubetcky/Text-Classification-with-ML-Project/main/news.csv'
+elif data_src == 'Bond':   # Olegh Bond data
+    csv_file = 'https://raw.githubusercontent.com/protw/airscape/master/src/data/twint_zelenski_categ.csv'
+
 import pandas as pd
-df = pd.read_csv('https://raw.githubusercontent.com/olegdubetcky/Text-Classification-with-ML-Project/main/news.csv', encoding='utf8')
+df = pd.read_csv(csv_file, encoding='utf8')
+
+import sys
+sys.path.append('../../')
+from twint_ops import twint_query_pars, set_path_pre
+from nlp_akhmel import ua_tokenizer
+import simplemma as sl
+
+def create_corpus(df):
+    ## Fetch ukr stopwords
+    tw = twint_query_pars()
+    stopwords_ua_file = tw['stopwords_ua_file']
+    stopwords_ua_file = set_path_pre(stopwords_ua_file)
+    stopwords_ua_df = pd.read_csv(stopwords_ua_file, index_col=False, 
+                                  header=None)
+    stopwords_ua = list(stopwords_ua_df.iloc[:,0])
+    ## Rename columns according to Dubetsky
+    df.rename(columns={'tweet':'title','Категорія':'category'},
+              inplace=True)
+    ## Clean, remove stopwords, tokenize and create text corpus (list of lists)
+    corpus = df['title'].apply(lambda x : ua_tokenizer(x,ua_stemmer=False,
+                                          stop_words=stopwords_ua)).tolist()
+    ## Lematizing text corpus
+    langdata = sl.load_data('uk')
+    new_corp = []
+    for tok_list in corpus:
+        lem_list = [sl.lemmatize(t, langdata) for t in tok_list]
+        new_corp.append(' '.join(lem_list))
+    return new_corp
+
+if data_src == 'Bond':
+    corpus = create_corpus(df)
+
+elif data_src == 'Dubetsky':
+    #перетворіть усі дані у нижній регістр, а потім збережіть їх у форматі списку
+    corpus = df['title'].apply(lambda x : str(x).lower()).tolist()
 
 df.category.unique()
 
-#перетворіть усі дані у нижній регістр, а потім збережіть їх у форматі списку
-corpus = df['title'].apply(lambda x : str(x).lower()).tolist()
+
 #встановити цільові змінні
 y = df['category']
-
-
 
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer
@@ -179,8 +218,15 @@ loaded_vec = CountVectorizer(vocabulary=pickle.load(open("feature.pkl", "rb")))
 loaded_tfidf = pickle.load(open("tfidf.pkl","rb"))
 loaded_model = pickle.load(open("LinearSVM_model.pkl","rb"))
 
-docs_new = "Макрон планує знову обговорити з Путіним ситуацію в Україні"
-X_new_counts = loaded_vec.transform([docs_new])
-X_new_tfidf = loaded_tfidf.transform(X_new_counts)
-predicted = loaded_model.predict(X_new_tfidf)
-print('Категорія: ', predicted[0])
+docs_news = {
+    'tweet':["У телефонній розмові @sandumaiamd подякувала Україні за швидку допомогу під час енергетичної кризи. Запевнив у готовності Прапор України й надалі допомагати Прапор Молдови у питанні постачання газу. Обговорили реалізацію проекту будівництва мосту через Дністер і підготовку до саміту",
+             "Вітаю мого друга @RTErdogan і весь турецький народ з 98-ю річницею проголошення Турецької Республіки. Високо ціную стратегічне партнерство наших держав. Переконаний, що відносини між Прапор України й Прапор Туреччини мають великий потенціал для розвитку. Бажаю миру та процвітання Прапор Туреччини"
+            ],
+    'Категорія': ['qwert','qwert']
+    }
+corp_test = create_corpus(pd.DataFrame.from_dict(docs_news))
+for docs_new in corp_test:
+    X_new_counts = loaded_vec.transform([docs_new])
+    X_new_tfidf = loaded_tfidf.transform(X_new_counts)
+    predicted = loaded_model.predict(X_new_tfidf)
+    print('Категорія: ', predicted[0])

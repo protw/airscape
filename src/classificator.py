@@ -1,7 +1,9 @@
 import pandas as pd
 
+from config_dir import my_dir # first, set paths to my directories
+
 ## Read all twits marked with categories
-twits = './data/twint_zelenski_categ.csv'
+twits = my_dir['data'] + 'twint_zelenski_categ.csv'
 twits_df = pd.read_csv(twits)
 
 ## Join three categories [3,6,7] into single [3]
@@ -11,7 +13,7 @@ twits_df['Категорія_Ід2'] = \
     [(4 if x in [5] else x) for x in twits_df['Категорія_Ід2']]
 
 ## Read definitions of categores
-categ = './data/twint_zelenski_classes.csv'
+categ = my_dir['data'] + 'twint_zelenski_classes.csv'
 categ_df = pd.read_csv(categ)
 
 from twint_ops import twint_query_pars
@@ -20,7 +22,7 @@ tw = twint_query_pars()
 
 """ Reading Ukrainian stopwords
 """
-stopwords_ua_file = tw['stopwords_ua_file']
+stopwords_ua_file = my_dir['data'] + tw['stopwords_ua_file']
 stopwords_ua_df = pd.read_csv(stopwords_ua_file, index_col=False, header=None)
 stopwords_ua = list(stopwords_ua_df.iloc[:,0])
 
