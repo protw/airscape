@@ -1,0 +1,5 @@
+﻿sensor_no,address,district,google_map,sensor_id,sensor_coord,sensor_type,note
+4275,"НАУ, проспект Любомира Гузара, 1, Київ, Україна",Солом'янський,https://goo.gl/maps/kBhC2axEdf2NkEBj8,9969,"50.44020,30.43013",PM,temp moved
+3934,"Школа №159, вул. Генерала Тупікова, 22, Київ, Україна",Солом'янський,https://goo.gl/maps/sugj23giETYrz1nC8,10001,"50.44107,30.43953",PM,working
+4097,"Ліцей №144, просп. Валерія Лобановського, 6, Київ, Україна",Солом'янський,https://goo.gl/maps/wVi6W7Y7LUS59Fdu9,10050,"50.42175,30.46593",PM,working
+4475,"Школа №317, вул. Булгакова, 12, Київ, Україна",Святошинський,https://goo.gl/maps/Jz9a5WawvQTpDEpG7,10049,"50.41017,30.40846",PM,working
