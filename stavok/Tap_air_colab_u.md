@@ -428,7 +428,7 @@ roTBs2RqAAAAAElFTkSuQmCC'
        style='height:15px; border-radius:12px; display: inline-block; float: left'></img>
 Якщо все гаразд, то ви отримаєте таку діаграму (на відміну від цієї статті діаграма буде інтерактивна):
 
-![](D:\boa_uniteam\DOCSIFY\airscape\stavok\tap_air_local-2-diagrams.png)
+![](tap_air_local-2-diagrams.png)
 
 
 ### Відображення на локальному комп'ютері
