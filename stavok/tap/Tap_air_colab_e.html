@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>Tap_air_colab_e</title>
+</head>
+<body><h1 id='complete-cycle-of-data-research-yourself'>Complete cycle of data research yourself</h1>
+<p>The ideal solution for every data researcher is to keep the full data research cycle in own hands, such as data importing, processing and researching with the help of interactive visualization with easy parameter management, and finally deploying the entire application somewhere in a remote server or cloud service.</p>
+<p>The avalanche-like development of <em>Python-</em>based open libraries, tools, environments, etc. in recent years has actually made these dreams come true - today it is no longer a fantasy that a researcher without basic IT education is able to have designed and launch a fully fledged cycle of <em>Python-</em>based data research.</p>
+<p>The following material is in fact a confirmation of the latter statement.</p>
+<h2 id='what-is-it-about-here'>What is it about here</h2>
+<p>TOC</p>
+<h2 id='data-research-cycle'>Data research cycle</h2>
+<p>Full single cycle data in a study by Mr. cial form can include, in particular, online import data from random sources, processing (this may be your model, neural network, transformer, etc.) and visual representation of data. Of course we want easy management of application processes and results display parameters. In addition to the saved images for the preparation of articles, presentations and reports, we need to present our results as an interactive application not only on your own computer, but also on the outside in open web access.</p>
+<p><img src="tap_air_local-flowchart-e.png" referrerpolicy="no-referrer"></p>
+<p>Also, a researcher may often need to run own code in different environments: <em>Python</em> CLI (running <em>Python</em> from a terminal or command line), IDE (integrated shell a type of <em>Spyder</em> ), <em>Jupyter Notebook</em>. In addition, the latter can be run both on your computer and on the web service <em>Google Colab</em>. Therefore, some of tips of running code in these different environments that have been explored are shown below.</p>
+<h2 id='what-we-want-to-build'>What we want to build</h2>
+<p>To demonstrate the visualization, we chose the example of the HeatMap from <em>Holoviews</em> [1] (left). We want to construct the mapping so that each row of this matrix (<em>Y</em>) corresponds to a separate air quality sensor, and each column ( <em>X</em> ) corresponds to a separate observation day. The color of an individual cell (<em>C<sub>D</sub></em>) should correspond to the average daily concentration of PM for a given (<em>X</em> , <em>Y</em>) (the lighter the lower the concentration). Matrix also has a certain feature - touching a certain matrix cell by the mouse invokes building of another diagram (on the right) - that is the time course of the concentration <em>C<sub>H</sub></em> with 30 minute step for the chosen sensor <em>Y</em> and for the selected day <em>X</em>.</p>
+<p>Schematic representation of our idea is shown below:</p>
+<p><img src="tap_air_local.png" referrerpolicy="no-referrer" alt="img"></p>
+<h2 id='installing-holoviz-libraries'>Installing Holoviz libraries</h2>
+<p>As usual, we start with installing the necessary libraries. This is a one-time procedure. On the local computer, the installation is performed using <a href='https://en.wikipedia.org/wiki/Conda_(package_manager)'><em>conda</em></a> (do not forget to activate the appropriate virtual environment with <em>conda</em>) as follows:</p>
+<pre><code>&gt; conda install -c pyviz holoviz
+</code></pre>
+<p>If you run the <em>Jupyter notebook</em> code in the <a href='https://en.wikipedia.org/wiki/Project_Jupyter#Industry_adoption'><em>colab</em></a> environment, the installation is performed using <a href='https://uk.wikipedia.org/wiki/Pip_(система_керування_пакунками)'><em>pip</em></a> directly from the notebook code:</p>
+<pre><code class='language-python' lang='python'>!pip install holoviz
+</code></pre>
+<h2 id='importing-modules'>Importing modules</h2>
+<p>Next, importing the necessary modules:</p>
+<pre><code class='language-python' lang='python'>import panel as pn
+import numpy as np
+import holoviews as hv
+from holoviews import opts
+</code></pre>
+<h2 id='setting-the-server-component'>Setting the server component</h2>
+<p>HoloViews supports multiple server components, namely <code>bokeh</code>, <code>matplotlib</code> and <code>plotly</code>. Depending on your preferences, you should initially set one of them:</p>
+<pre><code class='language-python' lang='python'>hv.extension(&#39;bokeh&#39;, width=90)
+</code></pre>
+<p>If all goes well, then immediately after that two icons should appear: <em>Holoviews</em> and <em>Bokeh</em>:</p>
+<p><img src="tap_air_local-holoviews-bokeh.png" referrerpolicy="no-referrer"></p>
+<h2 id='display-holoview-charts-in-colab'>Display Holoview charts in Colab</h2>
+<p>Playing tests with the application have shown that charts created by <em>Holoviews</em> do not appear in <em>Colab</em>.</p>
+<p>According to the results of studying this problem the following solution was found in references [2] and [3]. As a result, insert the following lines somewhere at the beginning of the code:</p>
+<pre><code class='language-python' lang='python'>import os, holoviews as hv 
+os.environ [&#39;HV_DOC_HTML&#39;] = &#39;true&#39;
+</code></pre>
+<p>or such equivalent:</p>
+<pre><code class='language-python' lang='python'>%env HV_DOC_HTML=true
+</code></pre>
+<p>Then, for each individual block of code where the charts are generated, you will have to reload the JS as follows:</p>
+<pre><code class='language-python' lang='python'>hv.extension(&#39;bokeh&#39;)
+# An example
+hv.Curve([1, 2, 3])
+</code></pre>
+<h2 id='description-of-the-input-data'>Description of the input data</h2>
+<p>The input data contain aerosol concentration (PM) with an interval of 30 minutes for 4 sensors located in Kyiv (Ukraine), and for 2 ranges of PM sizes: 2.5 and 10 μm. The data are taken from <a href='https://bit.ly/3ExKKm3'>the AirZOOM project</a> and cover the period of forest fires in the Chornobyl Exclusion Zone (130 km north of Kyiv) in early 2020.</p>
+<h2 id='reading-the-input-data'>Reading the input data</h2>
+<p>In this example, for simplicity we use a pre-prepared <a href='https://raw.githubusercontent.com/protw/airscape/master/data/200421 Chronograf Data.csv'>CSV file</a> . Although for other projects APIs with other types of databases can be used.</p>
+<pre><code class='language-python' lang='python'>import pandas as pd
+from datetime import datetimedef read_data():
+    data_file=&#39;https://raw.githubusercontent.com/protw/airscape/&#39;+\
+              &#39;master/data/200421%20Chronograf%20Data.csv&#39;
+    df = pd.read_csv(data_file)
+    df.time = [datetime.strptime(x[0:19],&#39;%Y-%m-%dT%H:%M:%S&#39;) \
+               for x in df.time]
+    df[&#39;dayhour&#39;] = [x.hour for x in df.time]
+    df[&#39;weekday&#39;] = [x.weekday() for x in df.time]
+    df[&#39;monthday&#39;]= [x.day for x in df.time]
+    df[&#39;yearday&#39;] = [x.timetuple().tm_yday for x in df.time]
+    df[&#39;yearweek&#39;]= [x.isocalendar()[1] for x in df.time] 
+    df[&#39;month&#39;]   = [x.month for x in df.time] 
+    df[&#39;year&#39;]    = [x.year for x in df.time]
+    df.sensor_id  = [str(x) for x in df.sensor_id]
+    return df
+    
+df = read_data()
+</code></pre>
+<p>In addition to reading the data, we generate several (date-time-derived) columns that may be needed for further analysis and charts construction:</p>
+<ul>
+<li><code>dayhour</code> - hour of day;</li>
+<li><code>weekday</code> - weekday;</li>
+<li><code>monthday</code> - day of month;</li>
+<li><code>yearday</code> - day of year;</li>
+<li><code>yearweek</code> - week of year;</li>
+<li><code>month</code> - month;</li>
+<li><code>year</code> - year.</li>
+
+</ul>
+<p>Let&#39;s look at the result of reading the input data:</p>
+<pre><code>df
+</code></pre>
+<p><img src="tap_air_local-table.png" referrerpolicy="no-referrer"></p>
+<p>38016 rows × 11 columns</p>
+<h2 id='dataset-definition'>Dataset definition</h2>
+<p>Let&#39;s assign independent (<code>kdims</code>) and dependent (<code>vdims</code>) variables in our dataset. The meaning of this appointment is quite clear - it <code>vdims</code>depends on <code>kdims</code>. Each variable is specified by a tuple containing two values, for example:</p>
+<ul>
+<li><code>(&#39;sensor_id&#39;,&#39;Sensor #&#39;)</code>: <code>sensor_id</code>- name of the data column, <code>Sensor #</code>- readable text used for this variable, particularly, in captions of axes in diagrams.</li>
+
+</ul>
+<pre><code class='language-python' lang='python'>dataset = hv.Dataset(df, 
+                     kdims=[(&#39;sensor_id&#39;,&#39;Sensor #&#39;),
+                            (&#39;yearday&#39;,&#39;Day of a year&#39;),
+                            (&#39;dayhour&#39;,&#39;Hour of a day&#39;),
+                            (&#39;factor&#39;,&#39;Pollution factor&#39;)],
+                     vdims=(&#39;val&#39;,&#39;Concentration, µg/m3&#39;))
+</code></pre>
+<h2 id='descriptive-data-statistics'>Descriptive data statistics</h2>
+<p>To build charts, we will need some parameters of the  dataset, such as maximum and maximum values, etc.:</p>
+<pre><code class='language-python' lang='python'>xmin = df.yearday.min()
+xmax = df.yearday.max()
+ymin = df.sensor_id.min()
+factors = df.factor.unique()
+factor = factors[0] # Later this will be substituted by UI
+</code></pre>
+<h2 id='declaration-of-two-charts'>Declaration of two charts</h2>
+<pre><code class='language-python' lang='python'>hv.extension(&#39;bokeh&#39;)## Declare HeatMap
+
+heatmap = hv.HeatMap(dataset.aggregate([&#39;yearday&#39;, &#39;sensor_id&#39;],\
+          np.mean), label=f&#39;Avg Daily {factor} Concentration&#39;). \
+          select(yearday=(xmin, xmax))
+
+## Declare Tap stream with heatmap as source and initial values
+posxy = hv.streams.Tap(source=heatmap, x=xmin, y=ymin)
+
+## Define function to compute histogram based on tap location
+def tap_histogram(x, y):
+    return hv.Curve(dataset.select(sensor_id=y, yearday=int(x), \
+           factor=factor), kdims=&#39;dayhour&#39;, \
+           label=f&#39;Day of year: {int(x)}, Sensor: {y}&#39;)
+
+## Connect the Tap stream to the tap_histogram callback
+tap_dmap = hv.DynamicMap(tap_histogram, streams=[posxy])
+
+## Get the range of the aggregated data we&#39;re using for plotting
+cmin, cmax = dataset.aggregate([&#39;yearday&#39;, &#39;sensor_id&#39;], \
+             np.mean).range(dim=&#39;val&#39;)
+</code></pre>
+<h2 id='display-charts'>Display charts</h2>
+<p>The following code is responsible for displaying the HeatMap and the time course of the concentration during the day in one row:</p>
+<pre><code class='language-python' lang='python'>hv.extension(&#39;bokeh&#39;)
+heatmap_tap_dmap = heatmap + tap_dmap
+(heatmap_tap_dmap).opts(
+    opts.Curve(framewise=True, height=500, line_color=&#39;black&#39;, \
+               width=375, yaxis=&#39;right&#39;),
+    opts.HeatMap(clim=(cmin, cmax), cmap=&#39;RdBu_r&#39;, \
+                 fontsize={&#39;xticks&#39;: &#39;6pt&#39;}, height=500, \
+                 logz=True, tools=[&#39;hover&#39;], width=700, \
+                 xrotation=90))
+</code></pre>
+<p>If all went well, you will get the following chart (unlike in this article, the chart will be interactive):</p>
+<p><img src="tap_air_local-2-diagrams.png" referrerpolicy="no-referrer" alt="img"></p>
+<h3 id='display-on-local-computer'>Display on local computer</h3>
+<p>This code immediately gives the result in the <em>Jupyter notebook</em>, but nothing is displayed when running it in <a href='https://en.wikipedia.org/wiki/Spyder_(software)'><em>Spyder</em></a>. The problem is solved with the help of commentary [4] in the following way.</p>
+<pre><code class='language-python' lang='python'>import panel as pnbokeh_server = pn.Row(heatmap_tap_dmap).show(port=12346)
+</code></pre>
+<p>To stop the server then, if necessary, run the following command in <em>Python</em> :</p>
+<pre><code class='language-python' lang='python'>bokeh_server.stop()
+</code></pre>
+<h2 id='run-the-application-as-a-server'>Run the application as a server</h2>
+<p>To run the web application as a server, type the following at a command prompt:</p>
+<pre><code>&gt; panel serve Tap_air_local.py
+</code></pre>
+<p>Here <code>Tap_air_local.py</code>is the name of our <em>Python</em> code , which includes all the steps outlined above. As the <em>Panel</em> works with <em>Jupyter notebooks</em>, you can run this command as: <code>panel serve Tap_air_local.ipynb</code>.</p>
+<p>You will then be prompted to go to the browser and launch the HTML page of your web app from the web address bar:</p>
+<pre><code>http://localhost:5006/Tap_air_local
+</code></pre>
+<h3 id='command-script'>Command script</h3>
+<p>We can combine these actions into a single command scenario. Let&#39;s call it <code>Tap_air_local.bat</code> (it&#39;s for Windows) and place this file next to the main code file <code>Tap_air_local.py</code>. For Windows 10, this script will look like this:</p>
+<pre><code>call C:\Users\&lt;user_name&gt;\miniconda3\Scripts\activate.bat &lt;env_name&gt;
+call panel serve Tap_air_local.py &gt; nul | Tap_air_local_Link.url
+</code></pre>
+<p>where:</p>
+<ul>
+<li><code>&lt;user_name&gt;</code> - your Windows 10 username on your local computer</li>
+<li><code>&lt;env_name&gt;</code>- the <em>Python Anaconda</em> virtual environment name of your web application;</li>
+<li><code>Tap_air_local_Link.url</code>- this label file for Windows, which contains the local web address for running the program: <a href='http://localhost:5006/Tap_air_local' target='_blank' class='url'>http://localhost:5006/Tap_air_local</a>.</li>
+
+</ul>
+<blockquote><p><strong>Warning!</strong> When creating a label file for Windows, specify it without an extension <code>.url</code> -  just <code>Tap_air_local</code>. The extension is really hidden and is added to the file automatically. </p>
+<p><strong>Note.</strong> You can easily change this command script for another operating system.</p>
+</blockquote>
+<p>After that, you just need to run <code>Tap_air_local.bat</code> in the terminal (command line) or double-click it in the File Explorer:</p>
+<pre><code>&gt; Tap_air_local
+</code></pre>
+<h2 id='whats-next'>What&#39;s next</h2>
+<p>A server that we can easily run on our own computer is fine if you have your own 24/7/365 operating server or proper access to your organization&#39;s server. For most, this is not the solution. Therefore, the next task is to deploy the application on cloud services. An example of such a deployment is given here:</p>
+<ul>
+<li><a href='https://towardsdatascience.com/deploying-panel-holoviz-dashboards-using-heroku-container-registry-5221eb0538ba'>Deploying Panel (Holoviz) dashboards using Heroku Container Registry | by Ali Shahid | Towards Data Science</a></li>
+
+</ul>
+<h2 id='references'>References</h2>
+<ol start='' >
+<li><a href='http://holoviews.org/reference/streams/bokeh/Tap.html' target='_blank' class='url'>http://holoviews.org/reference/streams/bokeh/Tap.html</a></li>
+<li><a href='https://stackoverflow.com/a/55514087' target='_blank' class='url'>https://stackoverflow.com/a/55514087</a></li>
+<li><a href='https://stackoverflow.com/a/55507337' target='_blank' class='url'>https://stackoverflow.com/a/55507337</a></li>
+<li><a href='https://stackoverflow.com/a/57971346' target='_blank' class='url'>https://stackoverflow.com/a/57971346</a></li>
+
+</ol>
+<p>Jupyter Notebook with this code for <em>Colab</em>:</p>
+<ol start='5' >
+<li><a href='https://github.com/protw/airscape/blob/master/stavok/Tap_air_colab.ipynb' target='_blank' class='url'>https://github.com/protw/airscape/blob/master/stavok/Tap_air_colab.ipynb</a></li>
+
+</ol>
+<p>The same <em>Python</em> code for CLI / IDE:</p>
+<ol start='6' >
+<li><a href='https://github.com/protw/airscape/blob/master/stavok/Tap_air_local.py' target='_blank' class='url'>https://github.com/protw/airscape/blob/master/stavok/Tap_air_local.py</a></li>
+
+</ol>
+<h2 id='tags'>Tags</h2>
+<p><code>Python</code>
+<code>Web App Development</code>
+<code>Data Science</code>
+<code>Data Visualization</code></p>
+<p>&nbsp;</p>
+</body>
+</html>
