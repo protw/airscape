@@ -73,12 +73,10 @@ def info_viz(drs,sns,fct):
 
 #### Compose panels and render
 
-pn.Column(param_panel, info_viz)
-
 bokeh_server = pn.Column(param_panel, info_viz).show(port=12346)
-# bokeh_server.stop()
+# bokeh_server.stop() # Запустити у разі потреби зупинити сервер 'bokeh_server'
 
-# ### Як серверний веб-застосунок
+# ### Запустити як серверний веб-застосунок
 #   ```
 #     (base)> activate airscape
 #     (airscape)> panel serve interact_data_tab.py
