@@ -214,10 +214,10 @@ if __name__ == '__main__':
 
 Зрештою маємо таку структуру програмних модулів утиліти `form2csv` включно з власними допоміжними модулями:
 
-- `form2csv.py` з роширеними коментарями українською
-  - `parse_cmd_line.py`
-  - `select_folder.py`
-  - `parse_cmd_line.md` - опис модулю `parse_cmd_line.py`
+- [`form2csv.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) з розширеними коментарями українською
+  - [`parse_cmd_line.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py)
+  - [`select_folder.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py)
+  - [`parse_cmd_line.md`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.md) - опис модулю `parse_cmd_line.py` українською
 
 ## Посилання
 
