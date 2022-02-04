@@ -24,8 +24,9 @@ import glob
 import os
 import csv
 import pandas as pd
-import re
+import sys
 from fetch_form_fields import fetch_form_fields
+from parse_cmd_line import fetch_cli_args
 
 
 # ## Файл для збирання табличних даних
@@ -33,23 +34,6 @@ from fetch_form_fields import fetch_form_fields
 # Для зручності ім'я файлу зібраних табличних даних збігається з іменем відповідного фолдеру з формами. Скажімо, ми маємо два фолдери `form_folder_1` і `form_folder_2`, що містять 2 різних набори заповнених форм. В такому разі файли зібраних табличних даних матимуть такі імена `form_folder_1.csv` і `form_folder_2.csv`. У підсумку файлова структура даних матиме такий вигляд: 
 # 
 # ![](form_data_structure.png)
-
-# Для створення імені файлу зібраних табличних даних відповідним фолдеру застосуємо таку функцію:
-
-# In[2]:
-
-
-def output_csv_name(form_dir):
-    output_csv = os.path.basename(form_dir)
-    # if 'form_dir' ends with '\' or '/' than 'output_csv' is empty string
-    if not output_csv:
-        # cut tailing '\' or '/'
-        form_dir = re.sub('[/\\\]+$','',form_dir)
-        output_csv = os.path.basename(form_dir)
-    return output_csv + '.csv'
-
-
-# Вхідним аргументом цієї функції є стрінгова змінна шлях фолдеру `form_dir`. За основу імені вибирається останній із сегментів шляху, що розділені знаком '\' або '/' з допомогою метода `os.path.basename`. Тут же враховується і нівелюється особливість цього метода, яка полягає в тому, що якщо шлях завершується знаком '\' або '/', то метод повертає порожній рядок.
 # 
 # Тепер можна формувати ім'я файлу зібраних табличних даних:
 
@@ -57,9 +41,14 @@ def output_csv_name(form_dir):
 
 
 # Data folder containing similar PDF forms
-form_dir = 'form-01\\'
-
-output_csv = output_csv_name(form_dir)
+initialdir = '.'
+             
+args = fetch_cli_args()
+if args['cancelled']:
+    print('Inputting cancelled!')
+    sys.exit()
+form_dir   = args["form_dir"]
+output_csv = '/'.join([args["output_dir"], args["output_csv"]])
 
 
 # Відкриваємо файл для збирання табличних даних:
