@@ -15,7 +15,7 @@ def select_folder(title='Select folder', initialdir='.'):
 
 if __name__ == '__main__':
     
-    sf = select_folder('.')
+    sf = select_folder(initialdir='.')
     if sf:
         print(f'Selected folder:\n{sf}')
     else:
