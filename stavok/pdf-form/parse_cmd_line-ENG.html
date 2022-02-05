@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>parse_cmd_line-ENG</title>
+</head>
+<body><h1 id='simple-cli--gui-for-processing-pdf-forms'>Simple CLI + GUI for processing PDF forms</h1>
+<p>If you do not want to go inside the code every time to adjust the input parameters, then this material is for you.</p>
+<p><img src="parse_cmd_line.png" referrerpolicy="no-referrer" alt="img"></p>
+<p>User interaction with software products, even with your own, is an important prerequisite for their effective reuse for both the author and other users. Both the command line interface (CLI) and the graphical user interface (GUI) are important for this interaction.</p>
+<p>In a recent article, <a href='https://oleghbond.medium.com/automated-processing-of-pdf-forms-fa635d497fc1#42a6'>&quot;Automated processing of PDF forms&quot;</a>, I described the implementation of a utility for automated processing of PDF forms. Everything seems to work fine, but this application clearly lacked a simple user interface. So I decided to fill in this gap.</p>
+<h2 id='what-we-want-to-build'>What we want to build</h2>
+<p>To run the utility (let&#39;s call it here <code>parse_cmd_line.py</code>) we need a fairly simple interface with four input parameters:</p>
+<figure><table>
+<thead>
+<tr><th>Parameter sintaxis</th><th>Explanation</th></tr></thead>
+<tbody><tr><td><code>-h, --help</code></td><td>Help</td></tr><tr><td><code>-f [FORM_DIR], --form_dir [FORM_DIR]</code></td><td>folder where the same type of PDF forms are placed</td></tr><tr><td><code>-c [OUTPUT_CSV], --output_csv [OUTPUT_CSV]</code></td><td>the name of the CSV table file where the values of the fields of the completed forms are collected</td></tr><tr><td><code>-d [OUTPUT_DIR], --output_dir [OUTPUT_DIR]</code></td><td>folder where the resulting CSV table will be placed</td></tr></tbody>
+</table></figure>
+<p>Square brackets indicate that the parameter is optional. There are two forms of writing a parameter, identical in action: <em>short</em> - with a single hyphen in front and <em>long</em> - with a double hyphen in front. The values of the parameters transmitted to the input of the utility are indicated in capital letters.</p>
+<p>Let&#39;s create a meta-code of command line to run the utility:</p>
+<pre><code class='language-shell' lang='shell'>&gt; python parse_cmd_line.py [-h] [-f [FORM_DIR]] [-c [OUTPUT_CSV]] [-d [OUTPUT_DIR]]
+</code></pre>
+<p>At the same time, we want to determine which interface we will use - CLI or GUI. It is also advisable not to inflate the number of parameters so that they are easy to remember, as well as to have a short help at hand to control comfortably the launch of the utility.</p>
+<h2 id='command-line-analysis-logic'>Command line analysis logic</h2>
+<p>The logic of command line analysis is presented in the table below. Columns 2, 3 and 4 describe how the values of the input parameters are formed in cases when:</p>
+<ul>
+<li>parameter and values are omitted;</li>
+<li>parameter is present, value is omitted;</li>
+<li>both parameter and value are present.</li>
+
+</ul>
+<figure><table>
+<thead>
+<tr><th>Parameter</th><th>Parameter and values<br> are omitted</th><th>Parameter is present, <br>value is omitted</th><th>Parameter <br>and value <br>are present</th></tr></thead>
+<tbody><tr><td><code>-f, --form_dir</code></td><td>GUI is used</td><td>GUI is used</td><td>value from <br>command line</td></tr><tr><td><code>-c, --output_csv</code></td><td>the last segment of <br>path <code>form_dir</code>, splitted <br>by <code>/</code>or<code>\</code>, is used</td><td>the last segment of <br>path <code>form_dir</code>, splitted <br>by <code>/</code>or<code>\</code>, is used</td><td>value from <br>command line</td></tr><tr><td><code>-d, --output_dir</code></td><td>the path 1 level above <br>the full path <code>form_dir</code></td><td>GUI is used</td><td>value from <br>command line</td></tr></tbody>
+</table></figure>
+<p>We add extension  <code>.csv</code> to the parameter value <code>output_csv</code> in case it is absent.</p>
+<h2 id='basis'>Basis</h2>
+<p>To build the CLI and GUI interface, we use well-known libriries <code>argparse</code>and <code>tkinter</code>, accordingly. The last module (<code>tkinter</code>) is used inside my own small module <code>select_folder</code>. Detailed descriptions of the modules can be found via links at the end of the article.</p>
+<pre><code class='language-python' lang='python'>import argparse
+import os
+import re
+from select_folder import select_folder
+</code></pre>
+<h2 id='command-line-analyzer'>Command line analyzer</h2>
+<p>First, let&#39;s build a command line analyzer (<em>parser</em>). The syntax of each parameter is set using the method <code>add_argument</code>. For this purpose we use the constructor <code>argparse.ArgumentParser</code> where we provide the short description through argument <code>description</code>.</p>
+<p>The first two string arguments of the method <code>add_argument</code>with one and two hyphens in front specify a short and long sitnaxis of the parameter in the line, respectively. The long parameter name (though without hyphens) will be used as the key of the resulting dictionary. Through this key we will have access to the parameter value.</p>
+<p>The default value of the parameter is set by argument  <code>default</code> of <code>add_argument</code>.</p>
+<p>The argument <code>nargs</code> determine the number of values that can be assigned to the parameters <code>form_dir</code> and <code>output_dir</code>. In case when <code>nargs=&#39;*&#39;</code> the number of values starts from 0. These values are stored in a form of a list. In the case where <code>nargs=&#39;?&#39;</code>, the parameter <code>output_csv</code> can be set to only one value.</p>
+<p>The argument <code>required=False</code> specifies that the parameter <code>form_dir</code> is not obligatory in command line. Though the argument <code>required</code> value is set <code>False</code> by default.</p>
+<pre><code class='language-python' lang='python'>def set_parser():
+    parser = argparse.ArgumentParser(description=&#39;Collecting data from multiple&#39;
+                                     &#39; PDF forms into single CSV table&#39;)
+    parser.add_argument(
+        &#39;-f&#39;,
+        &#39;--form_dir&#39;,
+        default=&#39;.\\&#39;,
+        nargs=&#39;*&#39;,
+        required=False,
+        help=&#39;PDF forms\&#39; folder (default: empty, than GUI is called)&#39;
+    )
+    parser.add_argument(
+        &#39;-c&#39;,
+        &#39;--output_csv&#39;,
+        default=&#39;&#39;,
+        nargs=&#39;?&#39;,
+        help=&#39;Output CSV file name (default: the same as \&#39;forms_folder\&#39;)&#39;
+    )
+    parser.add_argument(
+        &#39;-d&#39;,
+        &#39;--output_dir&#39;,
+        default=&#39;&#39;,
+        nargs=&#39;*&#39;,
+        help=&#39;Directory for output CSV file (default: empty, than 1 level up&#39;
+             &#39; \&#39;forms_dir\&#39;..)&#39;
+    )
+
+    return parser.parse_args()
+</code></pre>
+<h2 id='additional-logic'>Additional logic</h2>
+<p>Enabling more complex logic (as described above in the section &quot;<em>Command Line Analysis Logic</em>&quot;) requires additional code, which is presented in the function <code>fetch_cli_args</code> below. The code is divided into three blocks - separately for each parameter <code>form_dir</code>, <code>output_csv</code>and <code>output_dir</code>. For each parameter, analysis is performed on:</p>
+<ul>
+<li>whether a parameter is present in the command line at all;</li>
+<li>if it is present, whether the value of this parameter is specified or omitted in the command line;</li>
+<li>if the GUI call conditions are met (see the table above in the section &quot;<em>Command Line Analysis Logic</em>&quot;), the method <code>select_folder</code> is called.</li>
+
+</ul>
+<p>The processed results are returned via the following dictionary:</p>
+<pre><code>{&#39;form_dir&#39;: form_dir, &#39;output_csv&#39;: output_csv, &#39;output_dir&#39;: output_dir, &#39;cancelled&#39;: False}
+</code></pre>
+<p>Here you can see an additional field <code>cancelled</code>, which is usually set <code>False</code>. And only when selecting a folder in the graphical interface, you decide to cancel the input by pressing <code>Cancel</code>, the value of this field will be set <code>True</code>. Later this can be used to terminate the utility.</p>
+<pre><code class='language-python' lang='python'>def fetch_cli_args(initialdir=&#39;./&#39;):
+
+    parsed_cli = set_parser()
+    
+    # --form_dir
+    # &#39;-f&#39; omitted or &#39;-f&#39; with empty str list -&gt; GUI
+    if (type(parsed_cli.form_dir) is str) or \
+       len(parsed_cli.form_dir) == 0:
+        title = &#39;Select PDF form folder&#39;
+        form_dir = select_folder(title=title, initialdir=initialdir)
+        if len(form_dir) == 0: # GUI cancelled -&gt; stop execution
+            return {&#39;cancelled&#39;: True}
+    else:
+        form_dir = os.path.abspath(parsed_cli.form_dir[0])
+    
+    # --output_csv
+    if not parsed_cli.output_csv: # &#39;-c&#39; omitted -&gt; 
+        output_csv = os.path.basename(form_dir)
+        # if &#39;form_dir&#39; ends with &#39;\&#39; or &#39;/&#39; than &#39;output_csv&#39; is empty string
+        if not output_csv:
+            # cut tailing &#39;\&#39; or &#39;/&#39;
+            form_dir = re.sub(&#39;[/\\\]+$&#39;,&#39;&#39;,form_dir)
+        output_csv = os.path.basename(form_dir) + &#39;.csv&#39;
+    else:
+        output_csv = parsed_cli.output_csv
+        if output_csv.split(&#39;.&#39;)[-1].lower() != &#39;csv&#39;: 
+            output_csv += &#39;.csv&#39;
+    
+    # --output_dir
+    form_dir_ = &#39;/&#39;.join(re.split(&#39;[\\\\/]&#39;,form_dir)[:-1]) # 1 level up &#39;forms_dir\..&#39;
+    if len(form_dir_) == 0: # &#39;form_dir&#39; is root (most upper) folder
+        return {&#39;cancelled&#39;: True}
+    if type(parsed_cli.output_dir) is str: # &#39;-o&#39; omitted -&gt; 1 level up &#39;forms_dir\..&#39;
+        output_dir = form_dir_
+    elif len(parsed_cli.output_dir) == 0: # &#39;-o&#39; with empty str list -&gt; GUI
+        title = &#39;Select folder for output CSV&#39;
+        output_dir = select_folder(title=title, initialdir=form_dir_)
+        if len(output_dir) == 0: # GUI cancelled -&gt; stop execution
+            return {&#39;cancelled&#39;: True}
+    else:
+        output_dir = os.path.abspath(parsed_cli.output_dir[0])
+    
+    return {&#39;form_dir&#39;: form_dir, &#39;output_csv&#39;: output_csv, 
+            &#39;output_dir&#39;: output_dir, &#39;cancelled&#39;: False}
+</code></pre>
+<h2 id='code-fragment-for-testing'>Code fragment for testing</h2>
+<p>At the end of the module <code>parse_cmd_line.py</code> there is a fragment for debugging. It is needed to be able to run the module autonomously for testing or debugging purposes. The fragment represents an example of a typical use of the method <code>fetch_cli_args</code>.</p>
+<pre><code class='language-python' lang='python'>if __name__ == &#39;__main__&#39;:
+
+    import sys
+    
+    args = fetch_cli_args()
+    
+    if args[&#39;cancelled&#39;]:
+        print(&#39;Inputting cancelled!&#39;)
+        sys.exit()
+        
+    print(f&#39;form_dir   = {args[&quot;form_dir&quot;]}&#39;)
+    print(f&#39;output_csv = {args[&quot;output_csv&quot;]}&#39;)
+    print(f&#39;output_dir = {args[&quot;output_dir&quot;]}&#39;)
+</code></pre>
+<h2 id='simple-gui-method'>Simple GUI method</h2>
+<p>Finally, you can see the code of the module <code>select_folder</code> for creating a graphical interface used for folder selecting.</p>
+<pre><code class='language-python' lang='python'># Source: https://www.programcreek.com/python/?CodeExample=select+folder
+# Example: 11
+
+from tkinter import filedialog
+from tkinter import Tk
+    
+def select_folder(title=&#39;Select folder&#39;, initialdir=&#39;.&#39;):
+    root = Tk()
+    root.attributes(&quot;-topmost&quot;, True)
+    root.withdraw()
+    folder_path = filedialog.askdirectory(title=title, 
+                                          initialdir=initialdir)
+    root.destroy()
+    return folder_path 
+
+if __name__ == &#39;__main__&#39;:
+    
+    sf = select_folder(initialdir=&#39;.&#39;)
+    if sf:
+        print(f&#39;Selected folder:\n{sf}&#39;)
+    else:
+        print(&#39;Selection cancelled!&#39;)
+</code></pre>
+<h2 id='result'>Result</h2>
+<p>Eventually, we have the following structure of utility software modules, <code>form2csv</code> including own auxiliary modules:</p>
+<ul>
+<li><p><a href='https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py'><code>form2csv.py</code></a> with extended comments in Ukrainian</p>
+<ul>
+<li><a href='https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py'><code>parse_cmd_line.py</code></a></li>
+<li><a href='https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py'><code>select_folder.py</code></a></li>
+<li><a href='https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.md'><code>parse_cmd_line.md</code></a> — description of the module <code>parse_cmd_line.py</code> in Ukrainian</li>
+
+</ul>
+</li>
+
+</ul>
+<h2 id='references'>References</h2>
+<ol start='' >
+<li><a href='https://oleghbond.medium.com/automated-processing-of-pdf-forms-fa635d497fc1#42a6'>Automated processing of PDF forms | by Olegh Bondarenko | Jan, 2022 | Medium</a></li>
+<li><a href='https://docs.python.org/3/library/argparse.html#module-argparse'>argparse — Parser for command-line options, arguments and sub-commands — Python 3.10.2 documentation</a></li>
+<li><a href='https://realpython.com/command-line-interfaces-python-argparse/#setting-whether-the-argument-is-required'>How to Build Command Line Interfaces in Python With argparse – Real Python</a></li>
+<li><a href='https://docs.python.org/3/library/tkinter.html'>tkinter — Python interface to Tcl/Tk — Python 3.10.2 documentation</a></li>
+<li><a href='https://www.programcreek.com/python/?code=deepdiy%2Fdeepdiy%2Fdeepdiy-master%2Fdeepdiy%2Futils%2Fselect_path_dialog.py'>python source code of select_path_dialog</a></li>
+
+</ol>
+<p> </p>
+</body>
+</html>
