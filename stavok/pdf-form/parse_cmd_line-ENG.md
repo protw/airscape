@@ -215,10 +215,11 @@ if __name__ == '__main__':
 
 Eventually, we have the following structure of utility software modules, `form2csv` including own auxiliary modules:
 
-- [`form2csv.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) with extended comments in Ukrainian
-  - [`parse_cmd_line.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py)
-  - [`select_folder.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py)
-  - [`parse_cmd_line.md`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.md) — description of the module `parse_cmd_line.py` in Ukrainian
+- [`form2csv.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) – batch PDF-form processing with extended comments in Ukrainian
+  - [`fetch_form_fields.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/fetch_form_fields.py) – single PDF-form processing
+  - [`parse_cmd_line.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) – command line analyzer
+  - [`select_folder.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py) – folder selecting GUI
+  - [`parse_cmd_line.md`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line-ENG.md) — description of the module `parse_cmd_line.py`
 
 ## References
 

@@ -57,8 +57,8 @@ def fetch_form_fields(file_path):
 
 if __name__ == '__main__':
 
-    file_path = 'D:\\boa_dev\\pyt\\pdf-form\\form-02\\'
-    file_path += '220117 АНКЕТА НЕЦУ – Бондаренко Олег.pdf'
+    file_path = '.\\form-02\\'
+    file_path += '220119 АНКЕТА НЕЦУ-1.pdf'
 
     data = fetch_form_fields(file_path)
 

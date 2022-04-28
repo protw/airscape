@@ -24,9 +24,11 @@
   - [Робота зі складними датафреймами](long_wide.md)
   - [Демо інтерактивних даних](interact_data_demo.md)
   - [Види представлення даних](aq_data_presentation.md)
-  
 - **[Посилання](refs.md)**
 - **[План розробки](workplan.md)**
+- **[ЗСУ](./zsu/README.md)**
+  - [StrikeFire II Instruction (*Eng*)](./zsu/StrikeFire-II-Instruction.pdf)
+  - [StrikeFire II Інструкція (*Укр*)](./zsu/StrikeFire-II-Instruction-UKR.pdf)
 
 
 

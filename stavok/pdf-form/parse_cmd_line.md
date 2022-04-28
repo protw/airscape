@@ -216,10 +216,11 @@ if __name__ == '__main__':
 
 Зрештою маємо таку структуру програмних модулів утиліти `form2csv` включно з власними допоміжними модулями:
 
-- [`form2csv.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) з розширеними коментарями українською
-  - [`parse_cmd_line.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py)
-  - [`select_folder.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py)
-  - [`parse_cmd_line.md`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.md) - опис модулю `parse_cmd_line.py` українською
+- [`form2csv.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) – обробка пакету однотипних PDF-форм, з розширеними коментарями українською
+  - [`fetch_form_fields.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/fetch_form_fields.py) – обробка однієї PDF-форми
+  - [`parse_cmd_line.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.py) – аналізатор командного рядка
+  - [`select_folder.py`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/select_folder.py) – GUI для вибору фолдера
+  - [`parse_cmd_line.md`](https://github.com/protw/airscape/blob/master/stavok/pdf-form/parse_cmd_line.md) – опис модулю `parse_cmd_line.py` українською
 
 ## Посилання
 

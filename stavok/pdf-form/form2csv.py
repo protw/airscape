@@ -73,33 +73,35 @@ writer = csv.writer(out_file)
 
 # In[5]:
 
-
 print(f'FORM2CSV reading form data folder "{form_dir}"')
-header = [] # header row
 n_skipped = 0
 file_list = glob.glob(os.path.join(form_dir, '*.pdf'))
-for filename in file_list:
-    
-    data = fetch_form_fields(filename) # returns dictionary
-    
-    filename_i = os.path.basename(filename)
-    head = list(data.keys())
-    row = list(data.values())
-    if not header: # get header from the first file
-        header = head.copy()
-        header.insert(0,'file_name') # insert column with file name
-        writer.writerow(header)
-        header_set = set(head) # for further comparison
-        filename_0 = filename_i
-    else: # check whether the rest of files have the same fields' list
-        if header_set != set(head): # if not the same - skip this record
-            print(f'WARNING! Set of fields in "{filename_i}"'
-                  f' differs from  "{filename_0}"')
-            n_skipped += 1
-            continue
-    row.insert(0,filename_i) # insert column with file name
-    writer.writerow(row)
 
+def collect_data():
+    header = [] # header row
+    for filename in file_list:
+        
+        data = fetch_form_fields(filename) # returns dictionary
+        
+        filename_i = os.path.basename(filename)
+        head = list(data.keys())
+        row = list(data.values())
+        if not header: # get header from the first file
+            header = head.copy()
+            header.insert(0,'file_name') # insert column with file name
+            writer.writerow(header)
+            header_set = set(head) # for further comparison
+            filename_0 = filename_i
+        else: # check whether the rest of files have the same fields' list
+            if header_set != set(head): # if not the same - skip this record
+                print(f'WARNING! Set of fields in "{filename_i}"'
+                      f' differs from  "{filename_0}"')
+                n_skipped += 1
+                continue
+        row.insert(0,filename_i) # insert column with file name
+        writer.writerow(row)
+
+collect_data()
 
 # ## Заключні кроки
 # 
@@ -111,10 +113,10 @@ for filename in file_list:
 out_file.close()
 
 n_total_forms_number = len(file_list)
-print(f'Form data collected in table "{output_csv}"')
-print(f'Total number of forms: {n_total_forms_number}')
-print(f'Number of forms collected: {n_total_forms_number-n_skipped}')
-print(f'Number of forms skipped: {n_skipped}')
+print(f'-- Form data collected in table "{output_csv}"')
+print(f'-- Total number of forms: {n_total_forms_number}')
+print(f'-- Number of forms collected: {n_total_forms_number-n_skipped}')
+print(f'-- Number of forms skipped: {n_skipped}')
 
 
 # В зв'язку з тим, що у нашому випадку ми маємо вміст кирилицею і латиною, то для коректного відображення, зокрема, у Excel необхідно конвертувати текстовий CSV файл у `UTF BOM`.
