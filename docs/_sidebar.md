@@ -27,8 +27,8 @@
 - **[Посилання](refs.md)**
 - **[План розробки](workplan.md)**
 - **[ЗСУ](./zsu/README.md)**
-  - [StrikeFire II Instruction (*Eng*)](./zsu/StrikeFire-II-Instruction.pdf)
-  - [StrikeFire II Інструкція (*Укр*)](./zsu/StrikeFire-II-Instruction-UKR.pdf)
+  - [StrikeFire II Instruction (*Eng*)](https://github.com/protw/airscape/blob/master/docs/zsu/StrikeFire-II-Instruction.pdf)
+  - [StrikeFire II Інструкція (*Укр*)](https://github.com/protw/airscape/blob/master/docs/zsu/StrikeFire-II-Instruction-UKR.pdf)
 
 
 
