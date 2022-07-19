@@ -10,7 +10,7 @@ For this task a dedicated virtual environment `gis` is created.
 `kML` is converted to `GEOJSON`:
 
 - online by [MyGeodata Cloud - GIS Data Warehouse, Converter, Maps](https://mygeodata.cloud/)
-- programmatically by `kml2geojson` from [Python Convert KML to GeoJSON - deparkes](https://deparkes.co.uk/2017/11/17/python-convert-kml-to-geojson-with-kml2geojson/)
+- programmatically by [kml2geojson](https://gitlab.com/mrcagney/kml2geojson)
 
 # References
 
