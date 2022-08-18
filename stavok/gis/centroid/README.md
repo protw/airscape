@@ -60,5 +60,5 @@
 
 Кому цікаво. можуть подивитись вихідний код, а саме:
 
-* Основний модуль — [airscape/centroid\_calc\_colab.ipynb at master · protw/airscape](https://github.com/protw/airscape/blob/master/stavok/gis/centroid_calc_colab.ipynb)
-* Допоміжний модуль — [airscape/centroid\_util\_colab.py at master · protw/airscape](https://github.com/protw/airscape/blob/master/stavok/gis/centroid_util_colab.py)
+* Основний модуль — [airscape/centroid\_calc\_colab.ipynb at master · protw/airscape](https://github.com/protw/airscape/blob/master/stavok/gis/centroid/centroid_calc_colab.ipynb)
+* Допоміжний модуль — [airscape/centroid\_util\_colab.py at master · protw/airscape](https://github.com/protw/airscape/blob/master/stavok/gis/centroid/centroid_util_colab.py)

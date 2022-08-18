@@ -10,7 +10,7 @@ Original file is located at
 """
 
 !pip install PyGeodesy
-!curl -L -o centroidutilcolab.py https://raw.githubusercontent.com/protw/airscape/master/stavok/gis/centroid_util_colab.py
+!curl -L -o centroidutilcolab.py https://raw.githubusercontent.com/protw/airscape/master/stavok/gis/centroid/centroid_util_colab.py
 from centroidutilcolab import centroid_main
 
 #@title Параметри розрахунків
