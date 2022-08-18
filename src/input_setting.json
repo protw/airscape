@@ -1,0 +1,9 @@
+{
+  "user": "ZelenskyyUa",
+  "since": "2019-04-01",
+  "output_type": "csv",
+  "output_name": "twint_zelenski.csv",
+  "word_freq_csv": "word_freq_zel.csv",
+  "stopwords_ua_file": "stopwords_ua.txt",
+  "word_freq_img": "word_freq_zel.png"
+}
