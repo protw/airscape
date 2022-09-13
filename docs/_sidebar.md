@@ -24,6 +24,7 @@
   - [Робота зі складними датафреймами](long_wide.md)
   - [Демо інтерактивних даних](interact_data_demo.md)
   - [Види представлення даних](aq_data_presentation.md)
+  - [Довкільні карти України під час війни](ukr-env-data-and-maps.md)
 - **[Посилання](refs.md)**
 - **[План розробки](workplan.md)**
 - **[ЗСУ](./zsu/README.md)**
