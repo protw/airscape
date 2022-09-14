@@ -15,22 +15,41 @@ Original file is located at
 
 ## ІНІЦІАЛІЗАЦІЯ
 
-import sys
-LoM = sys.modules # List of Modules
-# IN_COLAB == True if Jupyter Notebook running under Google Colab
-IN_COLAB = 'google.colab' in LoM 
-print(f'IN_COLAB = {IN_COLAB}')
+from IPython.display import display
+import sys, os, psutil
 
-LoNM = ['pygeodesy', 'centroidutilcolab'] # List of Needed Modules
-if not all(m in LoM  for m in LoNM):
-  print('NOT all the needed modules imported')
-  !pip install PyGeodesy
-  import pygeodesy
-  !curl -L -o centroidutilcolab.py https://raw.githubusercontent.com/protw/airscape/master/stavok/gis/centroid/centroid_util_colab.py
-else:
-  print('All the needed modules imported')
+W_ENVS = ['jupyter-lab', 'jupyter-notebook', 
+          'google.colab', 'python'] 
 
-from centroidutilcolab import centroid_main
+def working_env():
+  parent_process = psutil.Process().parent().cmdline()[-1]
+
+  if W_ENVS[0] in parent_process:
+    w_env = W_ENVS[0]
+  elif W_ENVS[1] in parent_process:
+    w_env = W_ENVS[1]
+  elif W_ENVS[2] in sys.modules:
+    w_env = W_ENVS[2]
+  else:
+    w_env = W_ENVS[3]
+    
+  print(f'Working environment: {w_env}')
+
+  LoM = sys.modules # List of all available Modules
+  LoEM = ['pygeodesy', 'centroid_util_colab'] # List of Extra Modules
+  if 'google.colab' == w_env and not all(m in LoM for m in LoEM):
+    print('NOT all extra modules imported')
+    os.system('pip install PyGeodesy')
+    os.system('curl -L -o centroid_util_colab.py https://raw.githubusercontent.com/protw/airscape/master/stavok/gis/centroid/centroid_util_colab.py')
+  else:
+    print('All extra modules imported')
+    
+  return w_env
+
+w_env = working_env()
+
+import webbrowser
+from centroid_util_colab import centroid_main
 
 #@title Параметри розрахунків
 
@@ -38,6 +57,7 @@ format_pattern = [
     "46.7373, 32.8128", 
     "46,7373 / 32,8128", 
     "46.7373 32.8128"]
+html_page = 'centroid_map.html'
 
 coord_format = "46.7373, 32.8128" #@param ["46.7373, 32.8128", "46,7373 / 32,8128", "46.7373 32.8128"]
 lat_lon_order = 'LatLon' #@param ['LatLon', 'LonLat']
@@ -81,8 +101,12 @@ text
 
 """## Розрахунок"""
 
-map = centroid_main(text, coord_format_id=coord_format_id, perctl=perctl, zoom_start=zoom_start)
+map = centroid_main(text, coord_format_id=coord_format_id, perctl=perctl, 
+                    zoom_start=zoom_start, html_page=html_page)
 
 """## Візуалізація"""
 
-map
+if w_env in ['jupyter-lab', 'jupyter-notebook', 'google.colab']:
+    display(map)
+else:
+    webbrowser.open(html_page)

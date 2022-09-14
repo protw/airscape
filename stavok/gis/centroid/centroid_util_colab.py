@@ -59,7 +59,7 @@ def dist_stats(dist_l, perctl=75):
     # whereas the latest numpy version at its repo == 1.23.3
     if IN_COLAB:    
         dist['perc'] = np.percentile(dist_a, perctl)
-    else
+    else:
         dist['perc'] = np.percentile(dist_a, perctl,
                                  method='interpolated_inverted_cdf')
     return dist
