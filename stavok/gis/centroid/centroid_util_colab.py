@@ -4,11 +4,28 @@ import re
 import numpy as np
 import folium
 from folium.features import DivIcon
-import sys
+import sys, psutil
 from pygeodesy.sphericalNvector import meanOf, LatLon
 
 # IN_COLAB == True if Jupyter Notebook running under Google Colab
 IN_COLAB = 'google.colab' in sys.modules 
+
+def working_env():
+  W_ENVS = ['jupyter-lab', 'jupyter-notebook', 
+            'google.colab', 'python'] 
+
+  parent_process = psutil.Process().parent().cmdline()[-1]
+
+  if W_ENVS[0] in parent_process:
+    w_env = W_ENVS[0]
+  elif W_ENVS[1] in parent_process:
+    w_env = W_ENVS[1]
+  elif W_ENVS[2] in sys.modules:
+    w_env = W_ENVS[2]
+  else:
+    w_env = W_ENVS[3]
+
+  return w_env
 
 '''
   Розібрати вхідний текст - витягнути пари гео координат з тексту і

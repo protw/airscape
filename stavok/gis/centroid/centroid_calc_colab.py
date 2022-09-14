@@ -14,42 +14,30 @@ Original file is located at
 """
 
 ## ІНІЦІАЛІЗАЦІЯ
+import sys, os
 
-from IPython.display import display
-import sys, os, psutil
+# IN_COLAB == True if Jupyter Notebook running under Google Colab
+IN_COLAB = 'google.colab' in sys.modules 
 
-W_ENVS = ['jupyter-lab', 'jupyter-notebook', 
-          'google.colab', 'python'] 
+if IN_COLAB:
+  # Mount google drive in google colab
+  from google.colab import drive
+  drive.mount('/content/drive')
 
-def working_env():
-  parent_process = psutil.Process().parent().cmdline()[-1]
+  # Insert the directory
+  sys.path.insert(0,'/content/drive/My Drive/Colab Notebooks')
 
-  if W_ENVS[0] in parent_process:
-    w_env = W_ENVS[0]
-  elif W_ENVS[1] in parent_process:
-    w_env = W_ENVS[1]
-  elif W_ENVS[2] in sys.modules:
-    w_env = W_ENVS[2]
-  else:
-    w_env = W_ENVS[3]
-    
-  print(f'Working environment: {w_env}')
-
-  LoM = sys.modules # List of all available Modules
-  LoEM = ['pygeodesy', 'centroid_util_colab'] # List of Extra Modules
-  if 'google.colab' == w_env and not all(m in LoM for m in LoEM):
-    print('NOT all extra modules imported')
+  if not 'pygeodesy' in sys.modules:
     os.system('pip install PyGeodesy')
-    os.system('curl -L -o centroid_util_colab.py https://raw.githubusercontent.com/protw/airscape/master/stavok/gis/centroid/centroid_util_colab.py')
-  else:
-    print('All extra modules imported')
-    
-  return w_env
+
+# Import my module
+from centroid_util_colab import centroid_main, working_env
 
 w_env = working_env()
+print(f'Working environment: {w_env}')
 
 import webbrowser
-from centroid_util_colab import centroid_main
+from IPython.display import display
 
 #@title Параметри розрахунків
 
@@ -82,7 +70,7 @@ print(f'Стартовий зум мапи: {zoom_start}')
 
 Десяткова крапка і кома між значеннями (**coord_format_id = 0**):
 
-> (44.6857, 33.56173); (44.68599, 33.56555); ...  
+>	(44.6857, 33.56173); (44.68599, 33.56555); ...  
 
 Десяткова кома і дріб (slash) між значеннями (**coord_format_id = 1**):
 
@@ -101,7 +89,7 @@ text
 
 """## Розрахунок"""
 
-map = centroid_main(text, coord_format_id=coord_format_id, perctl=perctl, 
+map = centroid_main(text, coord_format_id=coord_format_id, perctl=perctl, \
                     zoom_start=zoom_start, html_page=html_page)
 
 """## Візуалізація"""
