@@ -7,6 +7,9 @@ from folium.features import DivIcon
 import sys
 from pygeodesy.sphericalNvector import meanOf, LatLon
 
+# IN_COLAB == True if Jupyter Notebook running under Google Colab
+IN_COLAB = 'google.colab' in sys.modules 
+
 '''
   Розібрати вхідний текст - витягнути пари гео координат з тексту і
   створити список пар координат типу float.
@@ -52,7 +55,13 @@ def dist_stats(dist_l, perctl=75):
     dist = {}
     dist_a = np.array(dist_l)
     dist['mean'] = np.mean(dist_a)
-    dist['perc'] = np.percentile(dist_a, perctl)
+    # On Sept 2022 the latest numpy version at Colab == 1.21.6
+    # whereas the latest numpy version at its repo == 1.23.3
+    if IN_COLAB:    
+        dist['perc'] = np.percentile(dist_a, perctl)
+    else
+        dist['perc'] = np.percentile(dist_a, perctl,
+                                 method='interpolated_inverted_cdf')
     return dist
 
 '''
@@ -89,8 +98,9 @@ def show_pnts_on_map(points,map,color='red',labels=[]):
     5) відобразити на карті точки і розмір області
 '''
 
-def centroid_main(text, coord_format_id=0, perctl=65, zoom_start=12):
-    pnts = parse_text(text,coord_format_id)
+def centroid_main(text, coord_format_id=0, perctl=65, zoom_start=14,
+                  html_page='centroid_map.html'):
+    pnts = parse_text(text, coord_format_id)
     print(f'Кількість точок: {len(pnts):d}')
 
     if len(pnts) < 2:
@@ -113,7 +123,7 @@ def centroid_main(text, coord_format_id=0, perctl=65, zoom_start=12):
     print(f'Середня відстань (м) - {dist["mean"]:.1f}\n'
           f'{perctl}% точок розміщені у колі діаметром {2*dist["perc"]:.1f} м')
 
-    ## Побудувати точки з номерами, центроїд, з'єднати центроїд з точками
+    ## Побудувати точки з номерами, центроїд, з'єднати центроїд з точками, 
     ## побудувати коло за розміром персентиля
 
     cntr_l = [cntr.lat, cntr.lon]
@@ -131,6 +141,8 @@ def centroid_main(text, coord_format_id=0, perctl=65, zoom_start=12):
     # побудувати коло за розміром персентиля
     folium.Circle(cntr_l, radius=dist['perc']).add_to(m)
 
-    ## Повернути мапу з нанесеними об'єктами
+    ## Зберегти і відобразити веб сторінку
+    m.save(html_page)
 
+    ## Повернути мапу з нанесеними об'єктами
     return m
