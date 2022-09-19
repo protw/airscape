@@ -10,22 +10,32 @@ from pygeodesy.sphericalNvector import meanOf, LatLon
 # IN_COLAB == True if Jupyter Notebook running under Google Colab
 IN_COLAB = 'google.colab' in sys.modules 
 
+'''
+  Визначити робоче середовище виконання коду. Наразі визначає 4
+  варіанти: ['jupyter-lab', 'jupyter-notebook', 'google.colab', 
+  'python']. Три перших виконуються у вигляді Jupyter Notebook
+  або ipynb-коду. Четвертий - у вигляді py-коду.
+  Посилання:
+  * [How to detect whether in Jupyter Notebook or Lab - Stack Overflow](https://stackoverflow.com/questions/57173235/how-to-detect-whether-in-jupyter-notebook-or-lab)
+  * [Test if notebook is running on Google Colab...anycodings](https://www.anycodings.com/1questions/2508923/test-if-notebook-is-running-on-google-colab)
+'''
+
 def working_env():
-  W_ENVS = ['jupyter-lab', 'jupyter-notebook', 
-            'google.colab', 'python'] 
+    W_ENVS = ['jupyter-lab', 'jupyter-notebook', 
+              'google.colab', 'python'] 
 
-  parent_process = psutil.Process().parent().cmdline()[-1]
+    parent_process = psutil.Process().parent().cmdline()[-1]
 
-  if W_ENVS[0] in parent_process:
-    w_env = W_ENVS[0]
-  elif W_ENVS[1] in parent_process:
-    w_env = W_ENVS[1]
-  elif W_ENVS[2] in sys.modules:
-    w_env = W_ENVS[2]
-  else:
-    w_env = W_ENVS[3]
+    if W_ENVS[0] in parent_process:
+        w_env = W_ENVS[0]
+    elif W_ENVS[1] in parent_process:
+        w_env = W_ENVS[1]
+    elif W_ENVS[2] in sys.modules:
+        w_env = W_ENVS[2]
+    else:
+        w_env = W_ENVS[3]
 
-  return w_env
+    return w_env
 
 '''
   Розібрати вхідний текст - витягнути пари гео координат з тексту і
