@@ -13,7 +13,8 @@ Original file is located at
 Після певного часу відсутності активності Гугл Колаб сервер відключається. Тому, після повторно підключення цей блок потрібно знов запустити.
 """
 
-## ІНІЦІАЛІЗАЦІЯ
+#@title ІНІЦІАЛІЗАЦІЯ
+
 import sys, os
 
 # IN_COLAB == True if Jupyter Notebook running under Google Colab
@@ -52,12 +53,7 @@ lat_lon_order = 'LatLon' #@param ['LatLon', 'LonLat']
 perctl = "75" #@param [50, 65, 75, 95]
 zoom_start = 17 #@param {type:"slider", min:11, max:18, step:1}
 
-coord_format_id = []
-for i,_ in enumerate(format_pattern):
-    if coord_format == format_pattern[i]:
-        coord_format_id = i
-        break
-
+coord_format_id = format_pattern.index(coord_format)
 perctl = float(perctl)
 
 print(f'Формат координат: {coord_format}')
@@ -83,17 +79,19 @@ print(f'Стартовий зум мапи: {zoom_start}')
 
 #@title СКОПІЮЙТЕ ВХІДНИЙ ТЕКСТ СЮДИ:
 
-text = '49.698824, 37.142584  (MGRS): 49.698164, 37.151901' #@param {type:"string"}
+text = '47.600139, 37.328760 \u043F\u043E 47.601340, 37.322856' #@param {type:"string"}
 
 text
 
 """## Розрахунок"""
 
+#@title РОЗРАХУНОК
 map = centroid_main(text, coord_format_id=coord_format_id, perctl=perctl, \
                     zoom_start=zoom_start, html_page=html_page)
 
 """## Візуалізація"""
 
+#@title ВІЗУАЛІЗАЦІЯ
 if w_env in ['jupyter-lab', 'jupyter-notebook', 'google.colab']:
     display(map)
 else:

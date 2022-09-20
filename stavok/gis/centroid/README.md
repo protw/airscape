@@ -61,7 +61,41 @@
 Кому цікаво. можуть подивитись вихідний код у [*Github* фолдері](https://github.com/protw/airscape/tree/master/stavok/gis/centroid), або конкретно:
 
 * Основний *ipynb*-модуль — [centroid_calc_colab.ipynb](centroid_calc_colab.ipynb)
-* Основний *py*-модуль — [centroid_calc_colab.py](centroid_calc_colab.py) - цей код створений завантаженням *ipynb*-модуля як *.py* без подальших коригувань
+* Основний *py*-модуль — [centroid_calc_colab.py](centroid_calc_colab.py) - цей код створений завантаженням *ipynb*-модуля як *.py* без подальших коригувань і може бути запущений з командного рядка ОС або під будь-якою інтегрованою оболонкою (IDE), наприклад, *spyder*:
+
+  ```
+  python centroid_calc_colab.py
+  ```
 * Допоміжний модуль — [centroid_util_colab.py](centroid_util_colab.py)
 
 **NB:** Код враховує деякі відмінності окремих середовищ таким чином, щоб без змін працювати у трьох середовищах: 1) *Jupyter Notebook* на локальному комп'ютері, 2) *Jupyter Notebook* на *Google Colab*, 3) безпосередньо в *Python*.
+
+## Веб застосунок
+
+Ще один варіант запуску `.ipynb` у вигляді веб застосунку з використанням [*Mercury*](https://mljar.com/mercury/). Але в цьому випадку код прийдеться переробити. Блокнот для запуску під *Mercury* представлений тут: [centroid_calc_mercury.ipynb](centroid_calc_mercury.ipynb).
+
+До запуску потрібно встановити *Mercury* з командного рядка ОС з допомогою *pip* ([Installation - Mercury Docs](https://mercury-docs.readthedocs.io/en/latest/installation/)):
+
+```
+pip install mljar-mercury
+```
+
+або з *conda*:
+
+```
+conda install -c conda-forge mljar-mercury
+```
+
+і, про всяк випадок, перевірити працездатність:
+
+```
+mercury run demo
+```
+
+Після цього запустити веб застосунок локально, скориставшись командою:
+
+```
+mercury run centroid_calc_mercury.ipynb
+```
+
+і відкрити веб-бравзер за адресою `http://127.0.0.1:8000`.
