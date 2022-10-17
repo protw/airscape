@@ -1,0 +1,44 @@
+coord_format:
+  label: Формат координат
+  options:
+    - "46.7373, 32.8128"
+    - "46,7373 / 32,8128"
+    - "46.7373 32.8128"
+  value: "46.7373, 32.8128"
+  name: coord_format
+lat_lon_order:
+  label: Порядок координат
+  options:
+    - LatLon
+    - LonLat
+  value: LatLon
+  name: lat_lon_order
+perctl:
+  label: Персентиль
+  options: [50, 65, 75, 95]
+  value: 75
+  name: perctl
+zoom_start:
+  label: Стартовий зум мапи
+  options: [11, 12, 13, 14, 15, 16, 17, 18]
+  value: 17
+  name: zoom_start
+text:
+  label: Вхідний текст
+  name: text
+  rows: 3
+  placeholder: Вставити вхідний текст сюди...
+coord_format_help_md: "# Зразки вхідного тексту
+
+0. Десяткова крапка і кома між значеннями (**coord_format_id = 0**):
+
+   > qwerty (44.6857, 33.56173); (44.68599, 33.56555); ...
+
+1. Десяткова кома і дріб (slash) між значеннями (**coord_format_id = 1**):
+
+   > Lorem ipsum dolor sit 46,736906/ 32,810302 adipiscin, do 46,737364/  32,812807 eiusmod ...
+
+2. Десяткова крапка і пробіл (**coord_format_id = 2**):
+
+   > АБВГД 48.01388889 38.79638889 07:59 АБВГД 48.01416667 38.90555556 07:53 ...
+"
