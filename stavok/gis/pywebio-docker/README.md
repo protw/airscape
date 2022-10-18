@@ -54,10 +54,10 @@ yml_file = 'centroid_pars.yml'
 
 with open(yml_file, "r") as file:
     in_pars = yaml.load(file, Loader=yaml.FullLoader)
-    # Forming the variables for further use
-    coord_format_help_md = in_pars['coord_format_help_md']
-    coord_format_options = in_pars['coord_format']['options']
-    in_pars.pop('coord_format_help_md') # delete unusable key otherwise it's error
+
+# Forming the variables for further use
+coord_format_help_md = in_pars['coord_format_help_md']
+coord_format_options = in_pars['coord_format']['options']
 ```
 
 Important point here: all the keys in the dict correspond exactly to argument names of input methods. Thus corresponding values of the dict will be passed properly as argument values to input methods below.

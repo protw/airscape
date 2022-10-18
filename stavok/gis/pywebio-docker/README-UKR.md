@@ -54,10 +54,10 @@ yml_file = 'centroid_pars.yml'
 
 with open(yml_file, "r") as file:
     in_pars = yaml.load(file, Loader=yaml.FullLoader)
-    # Forming the variables for further use
-    coord_format_help_md = in_pars['coord_format_help_md']
-    coord_format_options = in_pars['coord_format']['options']
-    in_pars.pop('coord_format_help_md') # delete unusable key otherwise it's error
+
+# Forming the variables for further use
+coord_format_help_md = in_pars['coord_format_help_md']
+coord_format_options = in_pars['coord_format']['options']
 ```
 
 Тут відмітимо важливий момент: усі ключі в словнику точно відповідають назвам аргументів методів введення. Таким чином, відповідні значення словника будуть належним чином передані як значення аргументів до методів введення. Про це нижче.
